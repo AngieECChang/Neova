@@ -25,12 +25,20 @@ class LoginController extends Controller
       if(!isset($user)){
         return redirect()->route('login')->with('error', '沒有該使用者ID');
       }elseif($user && isset($user->password) && password_verify($request->password, $user->password)){
-        session([
-          'user_id'   => $user->user_id,
-          'client_id' => $user->client_id,
-          'name'      => $user->name
-        ]);
-        return redirect()->route('dashboard');
+        $client = DB::selectOne("SELECT * FROM client_info WHERE client_id = ?", [$user->client_id]);
+        if(isset($client)){
+           session([
+            'user_id'   => $user->user_id,
+            'name'      => $user->name,
+            'client_id' => $user->client_id,
+            'client_name' => $client->client_name,
+            'client_type' => $client->client_type,
+            'DB' => $client->client_db
+          ]);
+          return redirect()->route('dashboard');
+        }else{
+          return redirect()->route('login')->with('error', '沒有對應的機構');
+        }
       }else{
         return redirect()->route('login')->with('error', '密碼錯誤');
       }

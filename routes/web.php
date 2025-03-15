@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\HClistController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,7 +22,10 @@ Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // 受保護的頁面
 Route::middleware(['auth.session'])->group(function () {
-    Route::get('/dashboard', function () {
-        return "歡迎 " . session('name') . "，這是你的儀表板";
-    })->name('dashboard');
+  Route::get('/dashboard', function () {
+      return view('dashboard');
+  })->name('dashboard');
+  Route::get('/hc-list', [HCListController::class, 'HCList'])->name('HCList');
 });
+
+
