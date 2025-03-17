@@ -24,6 +24,28 @@
           <i class="fas fa-fw fa-user"></i>
           <span>個案列表</span></a>
       </li>
+      @foreach ($allow_permission as $cateID => $permission)
+        <hr class="sidebar-divider">
+        <div class="sidebar-heading">
+          {{ $permission->first()->cate_shortname }} (cateID: {{ $cateID }})
+        </div>
+        @foreach ($permission as $item)
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
+            aria-expanded="true" aria-controls="collapseTwo">
+            <i class="fas fa-fw fa-{{$item->subcate_icon}}"></i>
+            <span>{{$item->subcate_name}}</span>
+          </a>
+          <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">Custom Components:</h6>
+                <a class="collapse-item" href="buttons.html">Buttons</a>
+                <a class="collapse-item" href="cards.html">Cards</a>
+            </div>
+          </div>
+        </li>
+        @endforeach
+      @endforeach
       <hr class="sidebar-divider">
       <!-- Heading -->
       <div class="sidebar-heading">
