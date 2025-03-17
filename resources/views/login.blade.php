@@ -9,6 +9,10 @@
   <style>
     body {
       background-color: #f8f9fa;
+      background-image: url('{{ asset("images/index_image.jpg") }}');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
     }
     .login-container {
       max-width: 400px;
