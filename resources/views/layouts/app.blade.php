@@ -15,32 +15,40 @@
         <div class="sidebar-brand-icon rotate-n-15">
             <i class="fas fa-laugh-wink"></i>
         </div>
-        <div class="sidebar-brand-text mx-3"> {{ session('client_name')}} {{ session('DB')}}</div>
+        <div class="sidebar-brand-text mx-3" style="color:#ff9f43 !important;"> {{ session('client_name')}} {{ session('DB')}}</div>
       </a>
       <hr class="sidebar-divider my-0">
       <!-- Nav Item - Dashboard -->
       <li class="nav-item active">
         <a class="nav-link" href="{{ route('HCList') }}">
-          <i class="fas fa-fw fa-user"></i>
-          <span>個案列表</span></a>
+          <i class="fas fa-fw fa-user" style="font-size:11pt !important;color:#faaacf !important;"></i>
+          <span style="font-size:11pt !important;color:#faaacf !important;">個案列表</span></a>
       </li>
       @foreach ($allow_permission as $cateID => $permission)
         <hr class="sidebar-divider">
-        <div class="sidebar-heading">
-          {{ $permission->first()->cate_shortname }} (cateID: {{ $cateID }})
+        <div class="sidebar-heading" style="font-size:12pt !important;font-weight: 600 !important;">{{ $permission->first()->cate_shortname }}
+          {{-- <h6 style="font-weight: 600 !important;color:#f6c23e !important;">{{ $permission->first()->cate_shortname }}</h6> --}}
         </div>
-        @foreach ($permission as $item)
+        @php
+        // 以 subcate_name 分組，避免重複顯示相同的 subcate_name
+          $subCategories = collect($permission)->groupBy('subcate_name');
+        @endphp
+        @foreach ($subCategories as $subcate_name => $items)
+        @php
+          $a_id = $items->first()->subcateID . '-' . $items->first()->itemID;
+        @endphp
         <li class="nav-item">
-          <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
-            aria-expanded="true" aria-controls="collapseTwo">
-            <i class="fas fa-fw fa-{{$item->subcate_icon}}"></i>
-            <span>{{$item->subcate_name}}</span>
+          <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapse{{$a_id}}" aria-expanded="true" aria-controls="collapse{{$a_id}}" style="font-size:11pt !important;font-weight: 600 !important;">
+            <i class="{{$items->first()->subcate_icon}}"></i>
+            <span style="font-size:11pt !important;font-weight: 600 !important;">{{$subcate_name}}</span>
           </a>
-          <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+          <div id="collapse{{$a_id}}" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <h6 class="collapse-header">Custom Components:</h6>
-                <a class="collapse-item" href="buttons.html">Buttons</a>
-                <a class="collapse-item" href="cards.html">Cards</a>
+              @foreach ($items as $item)
+                <a class="collapse-item d-inline-block" href="{{ $item->link }}" style="font-size:10.5pt;"> <i class="bi bi-plus-circle"></i>
+                 &nbsp;{{ $item->name }}
+                </a>
+              @endforeach
             </div>
           </div>
         </li>
