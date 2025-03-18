@@ -20,9 +20,20 @@
       <hr class="sidebar-divider my-0">
       <!-- Nav Item - Dashboard -->
       <li class="nav-item active">
-        <a class="nav-link" href="{{ route('HCList') }}">
-          <i class="fas fa-fw fa-user" style="font-size:11pt !important;color:#faaacf !important;"></i>
-          <span style="font-size:11pt !important;color:#faaacf !important;">個案列表</span></a>
+        <a href="#" class="sidebar-heading toggle-category nav-link" data-toggle="collapse" data-target="#categorylist" aria-expanded="false" aria-controls="categorylist" style="color:#faaacf;font-size:12pt !important;font-weight: 600 !important; text-decoration: none; padding-bottom:10px;"> 
+          <i class="fas fa-fw fa-users" style="font-size:11pt !important;color:#faaacf !important;"></i>
+          <span style="font-size:11pt !important;color:#faaacf !important;">個案列表</span>
+        </a>
+        <div id="categorylist" class="collapse" style="line-height:10px !important; padding:0rem 0rem !important;" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+        <div class="bg-white py-2 collapse-inner rounded">
+          <a class="collapse-item d-inline-block" href="{{route('hc-openlist')}}" style="font-size:11pt !important;font-weight: 600 !important;color:#6f42c1 !important;"><i class="bi bi-person-plus"></i> &nbsp;<span style="font-size:11pt !important;font-weight: 600 !important;color:#6f42c1 !important;">預收案</span>
+          </a>
+          <a class="collapse-item d-inline-block" href="{{route('hc-openlist')}}" style="font-size:11pt !important;font-weight: 600 !important;color:#6f42c1 !important;"><i class="bi bi-person-check"></i> &nbsp;<span style="font-size:11pt !important;font-weight: 600 !important;color:#6f42c1 !important;">收案</span>
+          </a>
+          <a class="collapse-item d-inline-block" href="{{route('hc-closelist')}}" style="font-size:11pt !important;font-weight: 600 !important;color:#6f42c1 !important;"><i class="bi bi-person-x"></i> &nbsp;<span style="font-size:11pt !important;font-weight: 600 !important;color:#6f42c1 !important;">結案</span>
+          </a>
+        </div>
+      </div>
       </li>
       @foreach ($allow_permission as $cateID => $permission)
         <hr class="sidebar-divider">

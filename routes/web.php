@@ -25,7 +25,9 @@ Route::middleware(['auth.session'])->group(function () {
   Route::get('/dashboard', function () {
       return view('dashboard');
   })->name('dashboard');
-  Route::get('/hc-list', [HCListController::class, 'HCList'])->name('HCList');
+  Route::get('/hc-openlist', [HCListController::class, 'HC_Openlist'])->name('hc-openlist');
+  Route::get('/hc-create', [HCListController::class, 'HC_Create'])->name('hc-create');
+  Route::get('/hc-closelist', [HCListController::class, 'HC_Closelist'])->name('hc-closelist');
 });
 
 
