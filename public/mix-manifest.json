@@ -1,6 +1,4 @@
 {
-    "/js/app.js": "/js/app.js?id=ac956ff98d8ac1e8a939b08770ab82fc",
-    "/css/sb-admin-2.min.css": "/css/sb-admin-2.min.css?id=e639311b0ccc0a3447ca4a1612b87216",
-    "/css/sb-admin-2.css": "/css/sb-admin-2.css?id=ed3bad3fa0ef9202d3445959b6c3916a",
-    "/css/app.css": "/css/app.css?id=68b329da9893e34099c7d8ad5cb9c940"
+    "/js/app.js": "/js/app.js",
+    "/css/app.css": "/css/app.css"
 }

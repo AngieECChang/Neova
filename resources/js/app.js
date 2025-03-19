@@ -1,4 +1,5 @@
 require('./bootstrap');
+
 $(document).ready(function() {
   $.ajaxSetup({
     headers: {

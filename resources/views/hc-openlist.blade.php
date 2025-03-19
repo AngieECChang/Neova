@@ -92,7 +92,7 @@
                       <td class="text-center">{{ $patient_type[$caseType] ?? '未知類型' }}</td>
                       <td class="text-center">{{ $case->open_date }}</td>
                       <td>
-                        <button class="btn btn-sm btn-warning edit-btn" data-id="{{ $case->caseID }}" data-caseno="{{ (string)$case->caseNoDisplay }}" data-type="{{ $case->case_type }}" data-casename="{{ $case->name }}" data-bs-toggle="modal" data-bs-target="#editModal">
+                        <button class="btn btn-sm btn-warning edit-btn" data-id="{{ $case->caseID }}" data-caseno="{{ (string)$case->caseNoDisplay }}" data-type="{{ $case->case_type }}" data-casename="{{ $case->name }}" data-bs-toggle="modal" data-bs-target="#editcaseModal">
                           <i class="bi bi-pencil-square"></i>修改案號、類型
                         </button>
                       </td>
@@ -147,7 +147,7 @@
                     <td class="text-center">{!! $gender[$case->gender] ?? '' !!}</td>
                     <td class="text-center">{{ $case->open_date }}</td>
                     <td>
-                      <button class="btn btn-sm btn-warning edit-btn" data-id="{{ $case->caseID }}" data-caseno="{{ (string)$case->caseNoDisplay }}" data-type="{{ $case->case_type }}" data-casename="{{ $case->name }}" data-bs-toggle="modal" data-bs-target="#editModal">
+                      <button class="btn btn-sm btn-warning edit-btn" data-id="{{ $case->caseID }}" data-caseno="{{ (string)$case->caseNoDisplay }}" data-type="{{ $case->case_type }}" data-casename="{{ $case->name }}" data-bs-toggle="modal" data-bs-target="#editcaseModal">
                         <i class="bi bi-pencil-square"></i>修改案號、類型
                       </button>
                     </td>
@@ -164,7 +164,7 @@
   @endforeach
 </div>
 <!-- 編輯 Modal -->
-<div class="modal fade" id="editModal" tabindex="-1">
+<div class="modal fade" id="editcaseModal" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -228,13 +228,13 @@ $(document).ready(function() {
     let caseId = $("#editCaseId").val();
     let caseNo = $("#editCaseNo").val();
     let caseType = $("#editCaseType").val();
-    // let token = $("input[name=_token]").val();
+    let token = $("input[name=_token]").val();  //雖然有設置全域meta和app.js但沒有作用，還是要在ajax時增加送出token
 
     $.ajax({
       url: "/update-case/" + caseId,
       method: "PUT",
       data: {
-        // _token: token,
+        _token: token,
         caseNo: caseNo,
         caseType: caseType
       },
