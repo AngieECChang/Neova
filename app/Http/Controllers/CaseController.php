@@ -76,4 +76,41 @@ class CaseController extends Controller
       }
     }
   }
+
+  public function case_new(Request $request)
+  {
+    $databaseName = session('DB'); // 可根據條件動態變更
+    $db = DatabaseConnectionService::setConnection($databaseName);
+
+    // 驗證輸入資料
+    $request->validate([
+        'name' => 'required|string|max:50',
+        'id_number' => 'required|string|size:10',
+        'birthday' => 'required|regex:/^\d{2,3}\/\d{1,2}\/\d{1,2}$/', // ROC 年/月/日 格式
+        'case_type' => 'required|string',
+        'case_no' => 'nullable|string|max:20',
+    ], [
+        'birthday.regex' => '生日格式錯誤，請輸入民國年/月/日，例如：112/03/18。',
+    ]);
+
+    // 轉換民國年為西元年
+    $rocDate = $request->input('birthday'); // 112/03/18
+    if (preg_match('/^(\d{2,3})\/(\d{1,2})\/(\d{1,2})$/', $rocDate, $matches)) {
+        $year = (int)$matches[1] + 1911;
+        $formattedDate = "{$year}-{$matches[2]}-{$matches[3]}"; // 轉換為 2023-03-18
+    } else {
+        return response()->json(['success' => false, 'message' => '生日格式錯誤'], 400);
+    }
+
+    // 插入資料到 DB
+    $db->table('cases')->insert([
+      'name' => $request->input('name'),
+      'IdNo' => $request->input('id_number'),
+      'birthdate' => $formattedDate, // 存入西元年
+      'case_type' => $request->input('case_type'),
+      'caseNo' => $request->input('case_no')
+    ]);
+
+    return response()->json(['success' => true]);
+  }
 }

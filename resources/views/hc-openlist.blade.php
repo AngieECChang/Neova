@@ -25,7 +25,10 @@
         @endforeach
       </select> 
       <div style="padding-left:10px">
-        <a href="{{ route('hc-create') }}" class="btn text-white" style="background-color: orange;">新增個案</a>
+        {{-- <button class="btn btn-sm btn-warning edit-btn" data-id="{{ $case->caseID }}" data-caseno="{{ (string)$case->caseNoDisplay }}" data-type="{{ $case->case_type }}" data-casename="{{ $case->name }}" data-bs-toggle="modal" data-bs-target="#newcaseModal">
+          <i class="bi bi-pencil-square"></i>修改案號、類型
+        </button> --}}
+        <a href="{{ route('hc-create') }}" class="btn text-white" style="background-color: orange;" data-bs-toggle="modal" data-bs-target="#newcaseModal">新增個案</a>
       </div>
     </form>
   </div>
@@ -197,6 +200,7 @@
     </div>
   </div>
 </div>
+@include('newcase')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
   document.getElementById('tableSearch').addEventListener('keyup', function() {
@@ -248,6 +252,79 @@ $(document).ready(function() {
       },
       error: function() {
         alert("修改失敗！");
+      }
+    });
+  });
+  let today = new Date();
+  let rocYear = today.getFullYear() - 1911; // 取得民國年
+  let maxROCYear = rocYear + 3; // 最大年份 = 今年 + 3 年
+  $("#roc_date").datepicker({
+    dateFormat: "yy/mm/dd", // yy 會解釋為 2 位數年份，但我們會手動轉換
+    yearRange: "10:"+maxROCYear,
+    changeMonth: true,
+    changeYear: true,
+    defaultDate: new Date(), // 預設為今天
+    monthNames: ["一月", "二月", "三月", "四月", "五月", "六月",
+                 "七月", "八月", "九月", "十月", "十一月", "十二月"], // 國字月份
+    monthNamesShort: ["1月", "2月", "3月", "4月", "5月", "6月",
+                      "7月", "8月", "9月", "10月", "11月", "12月"],
+    dayNamesMin: ["日", "一", "二", "三", "四", "五", "六"], // 國字星期
+    beforeShow: function (input, inst) {
+      let date = $(input).val();
+      if (date.match(/^(\d{2,3})\/(\d{1,2})\/(\d{1,2})$/)) {
+        let parts = date.split('/');
+        let year = parseInt(parts[0]) + 1911; // 轉換成西元年
+        $(input).val(year + '/' + parts[1] + '/' + parts[2]);
+      } else {
+        let today = new Date();
+        let rocYear = today.getFullYear() - 1911;
+        let defaultDate = rocYear + '/' + (today.getMonth() + 1) + '/' + today.getDate();
+        $(input).val(defaultDate); // 預設顯示民國年日期
+      }
+    },
+    onSelect: function (dateText, inst) {
+      if (dateText.match(/^(\d{4})\/(\d{1,2})\/(\d{1,2})$/)) {
+        let parts = dateText.split('/');
+        let year = parseInt(parts[0]) - 1911; // 轉換回民國年
+        $(this).val(year + '/' + parts[1] + '/' + parts[2]);
+      }
+    },
+    onClose: function (dateText, inst) {
+      if (dateText.match(/^(\d{4})\/(\d{1,2})\/(\d{1,2})$/)) {
+        let parts = dateText.split('/');
+        let year = parseInt(parts[0]) - 1911; // 轉換回民國年
+        $(this).val(year + '/' + parts[1] + '/' + parts[2]);
+      }
+    }
+  });
+
+  $("#newcaseForm").submit(function(e) {
+    e.preventDefault();
+
+    let formData = {
+      _token: $("input[name=_token]").val(),
+      name: $("#newCaseName").val(),
+      id_number: $("#newCaseID").val(),
+      birthday: $("#roc_date").val(), // 民國年 (112/03/18)
+      case_type: $("#newCaseType").val(),
+      case_no: $("#newCaseNo").val(),
+    };
+
+    $.ajax({
+      url: "/new-case",
+      type: "POST",
+      data: formData,
+      dataType: "json",
+      success: function (response) {
+        if (response.success) {
+          alert("個案新增成功！");
+          location.reload(); // 重新整理頁面
+        } else {
+          alert("錯誤：" + response.message);
+        }
+      },
+      error: function (xhr) {
+        alert("提交失敗，請檢查輸入資料！");
       }
     });
   });
